@@ -5,10 +5,11 @@
 
 using namespace std;
 
-
+/// @brief Constructor of class Maze
+/// @param rows number of rows in the maze
+/// @param cols number of columns in the maze
 Maze::Maze(int rows, int cols)
 {
-    cout << "Maze test" << endl;
     this->rows = rows;
     this->cols = cols;
 
@@ -29,6 +30,7 @@ Maze::Maze(int rows, int cols)
 }
 
 
+/// @brief Main method to generate the maze
 void Maze::generateMaze()
 {
     this->beginning.x = 1;
@@ -39,7 +41,9 @@ void Maze::generateMaze()
 
 void shuffleDirections(std::vector<std::pair<int, int>> &directions);
 
-
+/// @brief Backtracking implementation
+/// @param x Current position x
+/// @param y Current position y
 void Maze::backtrack(int x, int y)
 {
     this->maze[y][x] = Maze::PATH;
@@ -51,11 +55,11 @@ void Maze::backtrack(int x, int y)
         int dx = direction.first;
         int dy = direction.second;
 
-        // Calculate next neighbour
+        // Calculate the next neighbour
         int nx = x + dx;
         int ny = y + dy;
 
-        // Check the neighbour is available
+        // Check if the neighbour is available
         if ((nx >= 0) && (nx < this->cols) && (ny >= 0) && (ny < this->rows))
             if ((0 <= nx < this->cols) && (0 <= ny < this->rows))
             {
@@ -70,6 +74,8 @@ void Maze::backtrack(int x, int y)
     }
 }
 
+/// @brief Generate a randomized direction vector
+/// @param directions empty vector to be filled
 void shuffleDirections(std::vector<std::pair<int, int>> &directions)
 {
     std::random_device rd;
@@ -82,31 +88,37 @@ void shuffleDirections(std::vector<std::pair<int, int>> &directions)
 
     std::shuffle(directions.begin(), directions.end(), rng);
 }
-void Maze::setGoals(){
+
+/// @brief Set initial Beginning and end position
+void Maze::setGoals()
+{
     this->maze[beginning.y][beginning.x] = Maze::BEGINNING;
     end.x = beginning.x;
     end.y = beginning.y;
 
     Point candidate;
-    for (int iter=0; iter<1000; iter++){ // To avoid a infinite loop 
-        cout << "Search candidate " <<endl;
-
+    for (int iter = 0; iter < 1000; iter++)
+    { // To avoid a infinite loop
         this->generateRandomPosition(candidate);
-        if (this->maze[candidate.y][candidate.x]==this->PATH){
-            cout << "Found candidate "<< candidate.x << " " << candidate.y <<endl;
-            this->maze[candidate.y][candidate.x]=this->END;
-            this->end=candidate;
+        if (this->maze[candidate.y][candidate.x] == this->PATH)
+        {
+            this->maze[candidate.y][candidate.x] = this->END;
+            this->end = candidate;
             break;
         }
-    }    
+    }
 }
-void Maze::generateRandomPosition(Point &candidate){
-    std::random_device rd; // Random device to initialize the seed
+
+/// @brief Initialize a point with a random position with values inside of boundaries of the maze
+/// @param candidate empty candidate
+void Maze::generateRandomPosition(Point &candidate)
+{
+    std::random_device rd;        // Random device to initialize the seed
     std::mt19937 generator(rd()); //  Random number generator
 
     // Uniform distribution in the range [n, m]
-    std::uniform_int_distribution<int> distribution_rows(0, this->rows-1); 
-    std::uniform_int_distribution<int> distribution_cols(0, this->cols-1);
+    std::uniform_int_distribution<int> distribution_rows(0, this->rows - 1);
+    std::uniform_int_distribution<int> distribution_cols(0, this->cols - 1);
     candidate.y = distribution_rows(generator);
     candidate.x = distribution_cols(generator);
 }
