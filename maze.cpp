@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 Maze::Maze(int rows, int cols)
 {
     cout << "Maze test" << endl;
@@ -20,21 +21,24 @@ Maze::Maze(int rows, int cols)
         for (int x = 0; x < this->cols; x++)
         {
             if ((x == 0) || (x == this->cols - 1) || (y == 0) || (y == this->rows - 1))
-            { // Fill top or the bottom of the maze
+            {
                 this->maze[y][x] = Maze::WALL;
             }
         }
     }
 }
 
+
 void Maze::generateMaze()
 {
     this->beginning.x = 1;
     this->beginning.y = 1;
     this->backtrack(beginning.x, beginning.y);
+    this->setGoals();
 }
 
 void shuffleDirections(std::vector<std::pair<int, int>> &directions);
+
 
 void Maze::backtrack(int x, int y)
 {
@@ -77,6 +81,34 @@ void shuffleDirections(std::vector<std::pair<int, int>> &directions)
     // std::vector<std::pair<int, int>> directions = {{0, -2}, {0, 2}, {-2, 0}, {2, 0}};
 
     std::shuffle(directions.begin(), directions.end(), rng);
+}
+void Maze::setGoals(){
+    this->maze[beginning.y][beginning.x] = Maze::BEGINNING;
+    end.x = beginning.x;
+    end.y = beginning.y;
+
+    Point candidate;
+    for (int iter=0; iter<1000; iter++){ // To avoid a infinite loop 
+        cout << "Search candidate " <<endl;
+
+        this->generateRandomPosition(candidate);
+        if (this->maze[candidate.y][candidate.x]==this->PATH){
+            cout << "Found candidate "<< candidate.x << " " << candidate.y <<endl;
+            this->maze[candidate.y][candidate.x]=this->END;
+            this->end=candidate;
+            break;
+        }
+    }    
+}
+void Maze::generateRandomPosition(Point &candidate){
+    std::random_device rd; // Random device to initialize the seed
+    std::mt19937 generator(rd()); //  Random number generator
+
+    // Uniform distribution in the range [n, m]
+    std::uniform_int_distribution<int> distribution_rows(0, this->rows-1); 
+    std::uniform_int_distribution<int> distribution_cols(0, this->cols-1);
+    candidate.y = distribution_rows(generator);
+    candidate.x = distribution_cols(generator);
 }
 
 std::ostream &operator<<(std::ostream &os, const Maze &maze)

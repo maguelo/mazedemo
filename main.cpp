@@ -1,14 +1,11 @@
 #include <iostream>
-#include <vector>
-#include <string>
-
 #include "maze.hpp"
 
 using namespace std;
 
 int main()
 {
-    Maze maze = Maze(11,11);
+    Maze maze = Maze(25,25);
   
     maze.generateMaze();
 

@@ -20,6 +20,8 @@ class Maze {
 
   private:
     void backtrack(int x, int y);
+    void setGoals();
+    void generateRandomPosition(Point &candidate);
 
   private:
     int rows;
