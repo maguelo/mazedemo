@@ -29,7 +29,6 @@ Maze::Maze(int rows, int cols)
     }
 }
 
-
 /// @brief Main method to generate the maze
 void Maze::generateMaze()
 {
@@ -60,16 +59,12 @@ void Maze::backtrack(int x, int y)
         int ny = y + dy;
 
         // Check if the neighbour is available
-        if ((nx >= 0) && (nx < this->cols) && (ny >= 0) && (ny < this->rows))
-            if ((0 <= nx < this->cols) && (0 <= ny < this->rows))
+        if ((nx > 0) && (nx < this->cols - 1) && (ny > 0) && (ny < this->rows - 1))
+            if (this->maze[ny][nx] == WALL)
             {
-                if (this->maze[ny][nx] == WALL)
-                {
-
-                    // Clean the path to achieve it
-                    this->maze[ny - dy / 2][nx - dx / 2] = PATH;
-                    this->backtrack(nx, ny);
-                }
+                // Clean the path to achieve it
+                this->maze[ny - dy / 2][nx - dx / 2] = PATH;
+                this->backtrack(nx, ny);
             }
     }
 }
